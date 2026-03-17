@@ -1,6 +1,5 @@
 using Api.Contracts;
 using Api.Data;
-using Api.Models.DTO;
 using Api.Services;
 using Elastic.Clients.Elasticsearch;
 using Microsoft.EntityFrameworkCore;
@@ -36,16 +35,10 @@ namespace Api
                         builder.Services.AddScoped<IElasticsearchIndexService, ElasticsearchIndexService>();
                         builder.Services.AddScoped<IVacancyReindexService, VacancyReindexService>();
                         builder.Services.AddScoped<IVacancySearchService, VacancySearchService>();
+                        builder.Services.AddScoped<ISuggestService, SuggestService>();
+                        builder.Services.AddScoped<IVacancySyncService, VacancySyncService>();
 
                         var app = builder.Build();
-
-                        //using (var scope = app.Services.CreateScope())
-                        //{
-                        //        var dbContext = scope.ServiceProvider.GetRequiredService<JobRadarDbContext>();
-
-                        //        await dbContext.Database.MigrateAsync();
-                        //        await DbSeeder.SeedAsync(dbContext);
-                        //}
 
                         if (app.Environment.IsDevelopment())
                         {

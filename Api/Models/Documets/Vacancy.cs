@@ -16,5 +16,8 @@
                 public bool Remote { get; set; }
                 public DateTime PostedAt { get; set; }
                 public DateTime UpdatedAt { get; set; }
+
+                public string[] TitleSuggestions { get; set; } = Array.Empty<string>();
+                public string[] CompanySuggest { get; set; } = Array.Empty <string> ();
         }
 }

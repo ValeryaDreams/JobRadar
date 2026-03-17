@@ -21,12 +21,18 @@ namespace Api.Services
 
                         var total = await _context.Vacancies.CountAsync();
 
-                        for (int i = 0; i < total; i+=batchSize)
+                        for (int i = 0; i < total; i += batchSize)
                         {
                                 var batch = await _context.Vacancies
                                                           .Skip(i)
                                                           .Take(batchSize)
                                                           .ToListAsync();
+
+                                foreach (var vacancy in batch)
+                                {
+                                        vacancy.TitleSuggestions = string.IsNullOrWhiteSpace(vacancy.Title) ? Array.Empty<string>() : new[] { vacancy.Title };
+                                        vacancy.CompanySuggest = string.IsNullOrWhiteSpace(vacancy.Company) ? Array.Empty<string>() : new[] { vacancy.Currency };
+                                }
 
                                 var response = await _client.BulkAsync(b => b.IndexMany(batch));
 

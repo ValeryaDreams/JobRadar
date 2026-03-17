@@ -1,4 +1,5 @@
-﻿using Api.Services;
+﻿using Api.Models.Documets;
+using Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -7,19 +8,37 @@ namespace Api.Controllers
         [Route("admin")]
         public class AdminController: ControllerBase
         {
-                private readonly IVacancyReindexService _service;
+                private readonly IVacancyReindexService _reindexService;
+                private readonly IVacancySyncService _vacancySyncService;
 
-                public AdminController(IVacancyReindexService service)
+                public AdminController(IVacancyReindexService reindexService, IVacancySyncService vacancySyncService)
                 {
-                        _service = service;
+                        _reindexService = reindexService;
+                        _vacancySyncService = vacancySyncService;
                 }
 
                 [HttpPost("reindex")]
                 public async Task<IActionResult> Reindex()
                 {
-                        await _service.ReindexAsync();
+                        await _reindexService.ReindexAsync();
 
                         return Ok("Reindex complited");
+                }
+
+                [HttpPost("sync")]
+                public async Task<IActionResult> SyncVacancy([FromBody] Vacancy vacancy)
+                {
+                        await _vacancySyncService.UpsertVacancyAsync(vacancy);
+
+                        return Ok();
+                }
+
+                [HttpPost("sync/id")]
+                public async Task<IActionResult> DeleteVacancy(int id)
+                {
+                        await _vacancySyncService.DeleteVacancyAsync(id);
+
+                        return Ok();
                 }
         }
 }
